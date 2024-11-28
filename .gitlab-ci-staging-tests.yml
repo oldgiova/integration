@@ -45,7 +45,6 @@ test:staging:backend-tests:
     # Install python dependencies
     - pip3 install pyyaml
     - *setup_eks_cluster_staging
-
   script:
     - cd backend-tests
     - ./run -s enterprise

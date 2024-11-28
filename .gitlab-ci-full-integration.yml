@@ -44,6 +44,19 @@ test:integration:
         echo "Timeout waiting for docker to start"
         exit 1;
       fi
+
+    # Tuning - taken from https://github.com/mendersoftware/mender-qa/pull/662/files
+    
+    # Increase inotify limit to make sure the tests are not limited while
+    # running with high parallelism on a single VM
+    - sysctl -w fs.inotify.max_user_instances=1024
+
+    # Set minimaly required by Opensearch 'max virtual memory areas'
+    # https://opensearch.org/docs/2.4/install-and-configure/install-opensearch/index/#important-settings
+    - sysctl -w vm.max_map_count=262144
+    - sysctl -w fs.file-max=500000
+    - ulimit -Hn 65536
+    - ulimit -Sn 65536
   script:
     - cd tests
     - ./run.sh
